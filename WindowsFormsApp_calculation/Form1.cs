@@ -19,9 +19,9 @@ namespace WindowsFormsApp_calculation
 
         string inputnum;
         string ope;
-        float left;
-        float right;
-        float result;
+        float? left;
+        float? right;
+        float? result;
         bool minus = false;
         bool dot = false;
 
@@ -98,30 +98,30 @@ namespace WindowsFormsApp_calculation
             if (((Button)sender).Text == "C")
             {
                 textBox1.Text = "0";
-                inputnum = null;
-                ope = null;
-                right = 0;
-                left = 0;
-                result = 0;
-                minus = false;
-                dot = false;
+                    inputnum = null;
+                         ope = null;
+                       right = null;
+                        left = null;
+                      result = null;
+                      minus = false;
+                        dot = false;
             }
             else
             {
                 if (inputnum != null)                                /*初めての演算結果が出る前にCEがクリックされた時*/
                 {
-                    inputnum = null;
                     textBox1.Text = "0";
-                    minus = false;
-                    dot = false;
+                        inputnum = null;
+                          minus = false;
+                            dot = false;
                 }
                 else                                                /*演算結果が一回でも出た後にCEがクリックされた時*/
                 {
-                    inputnum = null;
                     textBox1.Text = "0";
-                    left = right;                                   /*右辺を左辺に代入*/
-                    minus = false;
-                    dot = false;
+                        inputnum = null;                 
+                          minus = false;
+                            dot = false;
+                           left = right;                            /*右辺を左辺に代入*/
                 }
             }
         }
@@ -134,80 +134,74 @@ namespace WindowsFormsApp_calculation
         /*********************演算子がクリックされた時*************************************:*/
         private void button13_Click_1(object sender, EventArgs e)
         {
-
-            if (left == 0)                               /*左辺にまだ入力されていない時*/
+            if(left != null)                                       /*左辺に数字があるとき*/
             {
-                if (((Button)sender).Text == "=")       /*=が押された時以外左辺に文字を保存*/
+                if(inputnum != null)                               /*数字が入力されているとき*/
                 {
-                    return;
+                    right = Convert.ToSingle(textBox1.Text);
+
+                    switch (ope)
+                    {
+                        case "+":
+                            result = left + right;
+                            break;
+
+                        case "-":
+                            result = left - right;
+                            break;
+
+                        case "×":
+                            result = left * right;
+                            break;
+
+                        case "÷":
+                            if (inputnum == "0")
+                            {
+                                MessageBox.Show("0で除算出来ません．", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                textBox1.Text = "0";
+                                inputnum = null;
+                                ope = null;
+                                right = 0;
+                                left = 0;
+                                result = 0;
+                                minus = false;
+                                dot = false;
+                                return;
+                            }
+                            else
+                            {
+                                result = left / right;
+                            }
+                            break;
+                    }
+                    textBox1.Text = result.ToString();
+                    left = result;
+                    inputnum = null;
+                    minus = false;
+                    dot = false;
                 }
                 else
                 {
-                    left = Convert.ToSingle(textBox1.Text);
-                    inputnum = null;                    /*入力文字を初期化し，演算子を保存*/
-                    ope = ((Button)sender).Text;
+                    ope = ((Button)sender).Text;　　　　　　　　　 /*続けて演算子がクリックされた時*/
                 }
             }
-            else                                        /*左辺に文字が入力されている時*/
+            else　　　　　　　　　　　　　　　　　　　　　　　　　 /*左辺に数字が無いとき*/
             {
-                if (inputnum == null && (((Button)sender).Text != "="))                   /*演算子だけが連続で押された時，最後に打たれた演算子が残る*/
-                {
-                    ope = ((Button)sender).Text;
-                    return;
-                }
-
-                right = Convert.ToSingle(textBox1.Text);
-
-                switch (ope)
-                {
-                    case "+":
-                        result = left + right;
-                        break;
-
-                    case "-":
-                        result = left - right;
-                        break;
-
-                    case "×":
-                        result = left * right;
-                        break;
-
-                    case "÷":
-                        if (inputnum == "0")
-                        {
-                            MessageBox.Show("0で除算出来ません．", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            textBox1.Text = "0";
-                            inputnum = null;
-                            ope = null;
-                            right = 0;
-                            left = 0;
-                            result = 0;
-                            minus = false;
-                            dot = false;
-                            return;
-                        }
-                        else
-                        {
-                            result = left / right;
-                        }
-                        break;
-                }
-                textBox1.Text = result.ToString();
-                left = result;
-                //inputnum = null;
-                minus = false;
-                dot = false;
-
-                if (((Button)sender).Text == "=")
-                {
-                    return;
-                }
-                else
-                {
-                    ope = ((Button)sender).Text;
-                }
-
+                left = Convert.ToSingle(textBox1.Text);
+                           ope = ((Button)sender).Text;
+                                       inputnum = null;             
             }
+        }
+
+        /*********************＝がクリックされた時*************************************:*/
+        private void button17_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public float mass(float left, float right, float result, string ope, string inputnum,　bool minus, bool dot)
+        {
+
         }
     }
 }
